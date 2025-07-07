@@ -12,7 +12,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { mockAttendanceSessions } from "../data/mockData";
-import type { BootcampTuple, SingleBootcamp } from "./BootcampDetails";
+import type { BootcampTuple, SingleBootcamp } from "./bootcamp-details";
 import { useAccount, useContract } from "@starknet-react/core";
 import { abi } from "../lib/abi";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";

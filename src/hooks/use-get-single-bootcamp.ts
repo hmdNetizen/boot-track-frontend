@@ -3,7 +3,7 @@ import { useAccount, useContract } from "@starknet-react/core";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { abi } from "../lib/abi";
 import { provider } from "../lib/rpc-provider";
-import type { BootcampTuple, SingleBootcamp } from "../pages/BootcampDetails";
+import type { BootcampTuple, SingleBootcamp } from "../pages/bootcamp-details";
 
 export function useGetSingleBootcamp(bootcampId: number | undefined) {
   const { address } = useAccount();

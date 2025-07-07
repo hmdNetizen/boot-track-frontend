@@ -10,7 +10,7 @@ import {
   Loader2,
 } from "lucide-react";
 import { mockAttendees, mockAssignmentGrades } from "../data/mockData";
-import { type SingleBootcamp } from "./BootcampDetails";
+import { type SingleBootcamp } from "./bootcamp-details";
 import { useAccount, useContract } from "@starknet-react/core";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
