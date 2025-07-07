@@ -45,7 +45,7 @@ const AttendeeView: React.FC = () => {
   const {
     bootcamp,
     isLoading: isLoadingBootcamp,
-    error: bootcampError,
+    error: _bootcampError,
   } = useGetSingleBootcamp(Number(bootcampId));
 
   useEffect(() => {
