@@ -76,7 +76,7 @@ Status categories:
 
 1. `create_bootcamp(...)`
 2. `register_attendees(...)` (batch mode)
-3. `add_tutor(...)`
+3. `add_tutor(...) add_multiple_tutors(...)`
 4. `open_attendance(...)`
 5. `mark_attendance(...)`
 6. `close_attendance(...)`
@@ -89,13 +89,6 @@ Status categories:
 - ZK-based attendance verification
 
 ## ⚙️ Getting Started
-
-This monorepo contains two main parts:
-
-- `boot_track_contract`: The Cairo smart contract logic
-- `boot-track-frontend`: The frontend app built with Vite + TypeScript + Tailwind CSS
-
----
 
 ### 🧾 Prerequisites
 
@@ -110,11 +103,7 @@ Make sure you have the following installed globally:
 
 ### 📦 Bootstrapping the Contract
 
-1. Navigate into the contract directory:
-
-```bash
-cd boot_track_contract
-```
+1. clone the repository:
 
 2. Run tests (optional):
 
@@ -127,12 +116,7 @@ scarb test
 
 ### 🖥️ Running the Frontend
 
-1. Navigate into the frontend directory:
-
-```bash
-cd boot-track-frontend
-```
-
+1. Clone the repository
 2. Install dependencies:
 
 ```bash
@@ -149,21 +133,22 @@ cp .env.example .env.local
 
 4. Start the development server:
 
-#### Links
+### Project Link
 
-Demo URL
-https://boot-track-frontend.vercel.app
+[https://boot-track-frontend.vercel.app](https://boot-track-frontend.vercel.app)
+
+### Project Codebase
 
 Frontend Repo
-https://github.com/hmdNetizen/boot-track-frontend
+[https://github.com/hmdNetizen/boot-track-frontend](https://github.com/hmdNetizen/boot-track-frontend)
 
 Smart Contract Repo
-https://github.com/hmdNetizen/boot-track-contract
+[https://github.com/hmdNetizen/boot-track-contract](https://github.com/hmdNetizen/boot-track-contract)
+
+### Project Video
+
+https://drive.google.com/file/d/1iVSxT25IOW-D8gJGfTSNGllZK4_fXw8I/view?usp=sharing
 
 ### 👤 Author
 
 **Hamed Jimoh**
-
----
-
-Built for the Starknet ecosystem to enhance transparency, automation, and decentralization in learning platforms.
