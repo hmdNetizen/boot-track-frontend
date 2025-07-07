@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -12,15 +12,11 @@ import {
   Shield,
   UserCheck,
 } from "lucide-react";
-import { useAccount, useContract } from "@starknet-react/core";
-import { abi } from "../lib/abi";
-import { provider } from "../lib/rpc-provider";
-import type { BootcampData } from "../App";
-import Attendees from "../components/attendees";
-import { CONTRACT_ADDRESS } from "../lib/contract-address";
-import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 
+import type { BootcampData } from "../App";
 export type BootcampTuple = [string, bigint, bigint, bigint, bigint, boolean];
+import Attendees from "../components/attendees";
+import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 
 export type SingleBootcamp = Pick<
   BootcampData,
@@ -35,14 +31,8 @@ export type SingleBootcamp = Pick<
 
 const BootcampDetails: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const { address } = useAccount();
-  const { contract } = useContract({
-    abi,
-    address: CONTRACT_ADDRESS,
-    provider,
-  });
 
-  const { bootcamp, error, isLoading } = useGetSingleBootcamp(Number(id));
+  const { bootcamp, isLoading } = useGetSingleBootcamp(Number(id));
 
   if (isLoading) {
     return (

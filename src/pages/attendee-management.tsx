@@ -1,15 +1,14 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { ArrowLeft, Users, User, Loader2 } from "lucide-react";
-import { mockAttendeeRecords } from "../data/mockData";
+import { Contract } from "starknet";
 
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 import { useFetchAttendees } from "../hooks/use-fetch-attendees";
 import DynamicInputFields from "../components/shared/dynamic-input-field";
-import { useDynamicInputs } from "../hooks/use-dynamic-input";
+import { useDynamicInputs, type InputField } from "../hooks/use-dynamic-input";
 import { useAccount, useSendTransaction } from "@starknet-react/core";
 import toast from "react-hot-toast";
-import { Contract } from "starknet";
 import { abi } from "../lib/abi";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
@@ -18,28 +17,24 @@ import AttendeeItem from "../components/attendee-item";
 
 const AttendeeManagement = () => {
   const { id } = useParams<{ id: string }>();
+  const [fields, setFields] = useState<InputField[]>([
+    { id: "1", value: "", isValid: true },
+  ]);
 
   const { address, isConnected } = useAccount();
 
   const contractInstance = new Contract(abi, CONTRACT_ADDRESS, provider);
 
-  const { bootcamp, error, isLoading } = useGetSingleBootcamp(Number(id));
+  // eslint-disabled-next-line
+  const { bootcamp, isLoading } = useGetSingleBootcamp(Number(id));
   const {
     attendeesList,
-    error: attendeesError,
     isLoading: isLoadingAttendees,
     setAttendeesList,
   } = useFetchAttendees(id);
 
-  const {
-    fields,
-    setFields,
-    handlePaste,
-    updateField,
-    addField,
-    removeField,
-    validateAllFields,
-  } = useDynamicInputs();
+  const { handlePaste, updateField, addField, removeField, validateAllFields } =
+    useDynamicInputs({ fields, setFields });
 
   const { sendAsync, isPending } = useSendTransaction({
     calls: undefined,
@@ -231,13 +226,7 @@ const AttendeeManagement = () => {
               <div className="text-2xl font-bold text-error-600">
                 {Math.round(
                   attendeesList.reduce((acc, a) => {
-                    const record = mockAttendeeRecords[a.address];
-                    return (
-                      acc +
-                      (record
-                        ? (record.attendanceCount / totalSessions) * 100
-                        : 0)
-                    );
+                    return acc + (a.attendanceCount / totalSessions) * 100;
                   }, 0) / attendeesList.length
                 )}
                 %

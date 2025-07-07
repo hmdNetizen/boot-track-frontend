@@ -34,7 +34,7 @@ const AttendanceManagement: React.FC = () => {
 
   const [bootcamp, setBootcamp] = useState<SingleBootcamp | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<null | string>("");
+  const [_error, setError] = useState<null | string>("");
 
   useEffect(() => {
     const fetchBootcamp = async () => {

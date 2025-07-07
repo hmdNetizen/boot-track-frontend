@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { BookOpen, Home, Menu, X } from "lucide-react";
-import { useAccount, useConnect, useDisconnect } from "@starknet-react/core";
+import { useAccount, useDisconnect } from "@starknet-react/core";
 import WalletModal from "./shared/wallet-modal";
 import classNames from "classnames";
 import toast from "react-hot-toast";

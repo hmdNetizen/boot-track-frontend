@@ -2,13 +2,14 @@ import { useMemo, useState } from "react";
 import DynamicInputFields from "./shared/dynamic-input-field";
 import { useAccount, useSendTransaction } from "@starknet-react/core";
 import { abi } from "../lib/abi";
-import { useDynamicInputs } from "../hooks/use-dynamic-input";
+import { useDynamicInputs, type InputField } from "../hooks/use-dynamic-input";
 import toast from "react-hot-toast";
 import { Contract } from "starknet";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
 import AttendeeItem from "./attendee-item";
 import { useFetchAttendees } from "../hooks/use-fetch-attendees";
+import { Loader2 } from "lucide-react";
 
 type AttendeesProps = {
   totalSessions: number;
@@ -36,16 +37,12 @@ export type TAttendee = {
 
 export default function Attendees({ totalSessions, id }: AttendeesProps) {
   const [showAddAttendees, setShowAttendees] = useState(false);
+  const [fields, setFields] = useState<InputField[]>([
+    { id: "1", value: "", isValid: true },
+  ]);
 
-  const {
-    fields,
-    setFields,
-    handlePaste,
-    updateField,
-    addField,
-    removeField,
-    validateAllFields,
-  } = useDynamicInputs();
+  const { handlePaste, updateField, addField, removeField, validateAllFields } =
+    useDynamicInputs({ fields, setFields });
 
   const attendeeAddresses: Array<string> = useMemo(
     () =>
@@ -63,8 +60,9 @@ export default function Attendees({ totalSessions, id }: AttendeesProps) {
 
   const contractInstance = new Contract(abi, CONTRACT_ADDRESS, provider);
 
-  const { attendeesList, error, isLoading, setAttendeesList } =
-    useFetchAttendees(id.toString());
+  const { attendeesList, isLoading, setAttendeesList } = useFetchAttendees(
+    id.toString()
+  );
 
   const handleValidate = () => {
     const isValid = validateAllFields();
@@ -141,17 +139,23 @@ export default function Attendees({ totalSessions, id }: AttendeesProps) {
             isPending={isPending}
           />
         ) : null}
-        {attendeesList.map((attendee, index) => {
-          return (
-            <AttendeeItem
-              key={attendee.address}
-              index={index}
-              attendee={attendee}
-              bootcampId={id}
-              totalSessions={totalSessions}
-            />
-          );
-        })}
+        {isLoading ? (
+          <div className="min-h-[50px] flex justify-center items-center">
+            <Loader2 className="animate-spin size-11" />
+          </div>
+        ) : (
+          attendeesList.map((attendee, index) => {
+            return (
+              <AttendeeItem
+                key={attendee.address}
+                index={index}
+                attendee={attendee}
+                bootcampId={id}
+                totalSessions={totalSessions}
+              />
+            );
+          })
+        )}
       </div>
     </div>
   );

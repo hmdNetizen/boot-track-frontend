@@ -47,7 +47,7 @@ function App() {
   const { address } = useAccount();
   const [bootcamps, setBootcamps] = useState<BootcampData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<string | null>("");
+  const [_error, setError] = useState<string | null>("");
 
   const { contract } = useContract({
     abi,

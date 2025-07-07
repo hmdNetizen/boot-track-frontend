@@ -6,11 +6,12 @@ export type InputField = {
   isValid: boolean;
 };
 
-export const useDynamicInputs = () => {
-  const [fields, setFields] = useState<InputField[]>([
-    { id: "1", value: "", isValid: true },
-  ]);
+type Params = {
+  fields: Array<InputField>;
+  setFields: React.Dispatch<React.SetStateAction<Array<InputField>>>;
+};
 
+export const useDynamicInputs = ({ fields, setFields }: Params) => {
   const parseCommaSeparatedString = (text: string): InputField[] => {
     const values = text
       .split(",")
@@ -83,8 +84,6 @@ export const useDynamicInputs = () => {
   };
 
   return {
-    fields,
-    setFields,
     handlePaste,
     updateField,
     addField,

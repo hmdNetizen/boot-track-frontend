@@ -1,37 +1,30 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
+
 import {
   ArrowLeft,
   UserPlus,
   Users,
-  Trash2,
   Shield,
   CheckCircle,
   AlertCircle,
+  X,
 } from "lucide-react";
 import { mockBootcamps, mockTutors } from "../data/mockData";
-import { addTutorSchema, type AddTutorFormData } from "../schemas/validation";
-import FormField from "../components/shared/form-field";
+
+import { useDynamicInputs, type InputField } from "../hooks/use-dynamic-input";
 
 const TutorManagement: React.FC = () => {
   const { id } = useParams<{ id: string }>();
   const bootcamp = mockBootcamps.find((b) => b.id === id);
-  const [tutors, setTutors] = useState<string[]>(mockTutors);
-  const [isRemoving, setIsRemoving] = useState<string | null>(null);
+  const [tutors, _setTutors] = useState<string[]>(mockTutors);
 
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<AddTutorFormData>({
-    resolver: zodResolver(addTutorSchema),
-    defaultValues: {
-      tutorAddress: "",
-    },
-  });
+  const [fields, setFields] = useState<InputField[]>([
+    { id: "1", value: "", isValid: true },
+  ]);
+
+  const { handlePaste, updateField, removeField, validateAllFields } =
+    useDynamicInputs({ fields, setFields });
 
   if (!bootcamp) {
     return (
@@ -44,32 +37,24 @@ const TutorManagement: React.FC = () => {
     );
   }
 
-  const onSubmit = async (data: AddTutorFormData) => {
-    // Check if tutor already exists
-    if (tutors.includes(data.tutorAddress)) {
+  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!validateAllFields) {
       return;
     }
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Adding tutor:", { bootcamp: id, tutor: data.tutorAddress });
-
-    setTutors((prev) => [...prev, data.tutorAddress]);
-    reset();
   };
 
-  const removeTutor = async (tutorAddress: string) => {
-    setIsRemoving(tutorAddress);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
-    console.log("Removing tutor:", { bootcamp: id, tutor: tutorAddress });
+  const handleInputPaste = (
+    e: React.ClipboardEvent<HTMLInputElement>,
+    fieldIndex: number
+  ) => {
+    const pastedText = e.clipboardData.getData("text");
 
-    setTutors((prev) => prev.filter((tutor) => tutor !== tutorAddress));
-    setIsRemoving(null);
-  };
-
-  const isTutorAlreadyAdded = (address: string) => {
-    return tutors.includes(address);
+    // Check if it looks like comma-separated values
+    if (pastedText.includes(",")) {
+      e.preventDefault();
+      handlePaste(pastedText, fieldIndex);
+    }
   };
 
   return (
@@ -103,8 +88,8 @@ const TutorManagement: React.FC = () => {
               <h2 className="text-xl font-semibold text-gray-900">Add Tutor</h2>
             </div>
 
-            <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
-              <FormField
+            <form onSubmit={onSubmit} className="space-y-4">
+              {/* <FormField
                 label="Tutor Wallet Address"
                 error={errors.tutorAddress}
                 required
@@ -119,14 +104,46 @@ const TutorManagement: React.FC = () => {
                       : ""
                   }`}
                 />
-              </FormField>
+              </FormField> */}
+              <div className="space-y-3">
+                {fields.map((field, index) => (
+                  <div key={field.id} className="flex gap-2 items-center">
+                    <div className="flex-1">
+                      <input
+                        placeholder="Enter value"
+                        value={field.value}
+                        onChange={(e) => updateField(field.id, e.target.value)}
+                        onPaste={(e) => handleInputPaste(e, index)}
+                        className={`input-field font-mono ${
+                          !field.isValid
+                            ? "border-red-500 focus:border-red-500"
+                            : ""
+                        }`}
+                      />
+                      {!field.isValid && (
+                        <p className="text-red-500 text-sm mt-1">
+                          This field cannot be empty
+                        </p>
+                      )}
+                    </div>
+                    {fields.length > 1 && (
+                      <button
+                        onClick={() => removeField(field.id)}
+                        className="h-10 w-10 flex-shrink-0"
+                      >
+                        <X className="h-4 w-4" />
+                      </button>
+                    )}
+                  </div>
+                ))}
+              </div>
 
               <button
                 type="submit"
-                disabled={isSubmitting}
+                // disabled={}
                 className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                {isSubmitting ? "Adding..." : "Add Tutor"}
+                Add Tutor
               </button>
 
               <div className="p-3 bg-primary-50 rounded-lg">
@@ -195,7 +212,7 @@ const TutorManagement: React.FC = () => {
                         <span className="status-badge status-active text-xs">
                           Active
                         </span>
-                        <button
+                        {/* <button
                           onClick={() => removeTutor(tutor)}
                           disabled={isRemoving === tutor}
                           className="p-2 text-gray-400 hover:text-error-600 rounded-lg hover:bg-error-50 transition-colors disabled:opacity-50"
@@ -206,7 +223,7 @@ const TutorManagement: React.FC = () => {
                           ) : (
                             <Trash2 className="h-4 w-4" />
                           )}
-                        </button>
+                        </button> */}
                       </div>
                     </div>
                   </div>

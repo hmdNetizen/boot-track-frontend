@@ -31,7 +31,7 @@ const AttendeeView: React.FC = () => {
   const [searchParams] = useSearchParams();
   const attendeeAddress = searchParams.get("address");
   const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<null | string>(null);
+  const [_error, setError] = useState<null | string>(null);
 
   const [attendeeInfo, setAttendeeInfo] = useState<TAttendeeData>();
 
