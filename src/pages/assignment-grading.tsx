@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -10,11 +10,12 @@ import {
   Loader2,
 } from "lucide-react";
 import { mockAttendees, mockAssignmentGrades } from "../data/mockData";
-import { type SingleBootcamp } from "./bootcamp-details";
+import { type BootcampTuple, type SingleBootcamp } from "./bootcamp-details";
 import { useAccount, useContract } from "@starknet-react/core";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
 import { abi } from "../lib/abi";
+import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 
 const AssignmentGrading: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -26,16 +27,17 @@ const AssignmentGrading: React.FC = () => {
     "individual"
   );
 
-  const { address } = useAccount();
-  const { contract } = useContract({
-    abi,
-    address: CONTRACT_ADDRESS,
-    provider,
-  });
+  // const { address } = useAccount();
+  // const { contract } = useContract({
+  //   abi,
+  //   address: CONTRACT_ADDRESS,
+  //   provider,
+  // });
 
-  const [bootcamp, setBootcamp] = useState<SingleBootcamp | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-  const [error, setError] = useState<null | string>("");
+  // const [isLoading, setIsLoading] = useState(false);
+  // const [error, setError] = useState<null | string>("");
+
+  const { bootcamp, isLoading, error } = useGetSingleBootcamp(Number(id));
 
   // useEffect(() => {
   //   const fetchAssignmentInfo = async () => {
@@ -46,6 +48,7 @@ const AssignmentGrading: React.FC = () => {
 
   //     try {
   //       const result = await contract.get_assignment_info(Number(id), Number(selectedWeek));
+  //       // @ts-ignore
   //       const item = result as BootcampTuple;
   //       const bootcampData: SingleBootcamp = {
   //         id: Number(id),
@@ -57,7 +60,7 @@ const AssignmentGrading: React.FC = () => {
   //         isActive: item[5],
   //       };
   //       setBootcamp(bootcampData);
-  //     } catch (err) {
+  //     } catch (err: any) {
   //       console.error("Contract call error:", err);
   //       setError(err.message);
   //     } finally {
