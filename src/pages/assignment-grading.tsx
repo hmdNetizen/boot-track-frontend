@@ -12,18 +12,31 @@ import {
 import { mockAttendees, mockAssignmentGrades } from "../data/mockData";
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 import { useFetchAttendees } from "../hooks/use-fetch-attendees";
+import { Contract } from "starknet";
+import { abi } from "../lib/abi";
+import { CONTRACT_ADDRESS } from "../lib/contract-address";
+import { provider } from "../lib/rpc-provider";
+import { useAccount, useSendTransaction } from "@starknet-react/core";
+import toast from "react-hot-toast";
 
 const AssignmentGrading: React.FC = () => {
   const { id } = useParams<{ id: string }>();
 
   const [selectedWeek, setSelectedWeek] = useState(1);
   const [grades, setGrades] = useState<Record<string, number>>({});
-  const [isSaving, setIsSaving] = useState(false);
   const [gradingMode, setGradingMode] = useState<"individual" | "batch">(
     "individual"
   );
 
-  const { bootcamp, isLoading, error } = useGetSingleBootcamp(Number(id));
+  const contractInstance = new Contract(abi, CONTRACT_ADDRESS, provider);
+
+  const { isConnected, address } = useAccount();
+
+  const { sendAsync, isPending } = useSendTransaction({
+    calls: undefined,
+  });
+
+  const { bootcamp, isLoading } = useGetSingleBootcamp(Number(id));
   const { attendeesList, isLoading: isLoadingAttendees } =
     useFetchAttendees(id);
 
@@ -55,21 +68,37 @@ const AssignmentGrading: React.FC = () => {
     }));
   };
 
-  const handleSaveGrades = async () => {
-    setIsSaving(true);
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1500));
-    console.log("Saving grades:", { bootcamp: id, week: selectedWeek, grades });
-    setGrades({});
-    setIsSaving(false);
-  };
-
   const getExistingGrade = (attendee: string) => {
     const gradeKey = `${id}-${selectedWeek}-${attendee}`;
     return mockAssignmentGrades[gradeKey]?.score || 0;
   };
 
   const hasUnsavedChanges = Object.keys(grades).length > 0;
+
+  const onSubmitHandler = async () => {
+    if (!isConnected || !address) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
+    const attendeeAddresses = Object.keys(grades);
+    const scores = attendeeAddresses.map((addr) => grades[addr]);
+
+    try {
+      const call = await contractInstance.populate("batch_grade_assignments", {
+        bootcamp_id: Number(id),
+        week: selectedWeek,
+        attendees: attendeeAddresses,
+        scores: scores,
+      });
+      await sendAsync([call]);
+      setGrades({});
+      toast.success(`Week ${selectedWeek} Assignments graded`);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error occurred while adding tutor");
+    }
+  };
 
   return (
     <div className="space-y-8">
@@ -153,12 +182,12 @@ const AssignmentGrading: React.FC = () => {
           </div>
           {hasUnsavedChanges && (
             <button
-              onClick={handleSaveGrades}
-              disabled={isSaving}
+              onClick={onSubmitHandler}
+              disabled={isPending}
               className="btn-primary flex items-center gap-2 disabled:opacity-50"
             >
               <Save className="h-4 w-4" />
-              {isSaving ? "Saving..." : "Save Grades"}
+              {isPending ? "Saving..." : "Save Grades"}
             </button>
           )}
         </div>
@@ -268,22 +297,22 @@ const AssignmentGrading: React.FC = () => {
         )}
       </div>
 
-      {hasUnsavedChanges && (
+      {/* {hasUnsavedChanges && (
         <div className="fixed bottom-6 right-6">
           <div className="bg-warning-50 border border-warning-200 rounded-lg p-4 shadow-lg">
             <p className="text-sm text-warning-800 mb-2">
               You have unsaved changes
             </p>
             <button
-              onClick={handleSaveGrades}
-              disabled={isSaving}
+              onClick={onSubmitHandler}
+              disabled={isPending}
               className="btn-primary text-sm disabled:opacity-50"
             >
-              {isSaving ? "Saving..." : "Save Changes"}
+              {isPending ? "Saving..." : "Save Changes"}
             </button>
           </div>
         </div>
-      )}
+      )} */}
     </div>
   );
 };

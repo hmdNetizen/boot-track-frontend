@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import {
@@ -11,7 +11,6 @@ import {
   X,
   Loader2,
 } from "lucide-react";
-import { mockBootcamps, mockTutors } from "../data/mockData";
 
 import { useDynamicInputs, type InputField } from "../hooks/use-dynamic-input";
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
@@ -30,12 +29,7 @@ const TutorManagement: React.FC = () => {
     { id: "1", value: "", isValid: true },
   ]);
 
-  const {
-    isLoading: isLoadingTutors,
-    error,
-    setTutors,
-    tutors,
-  } = useFetchTutors(id);
+  const { isLoading: isLoadingTutors, setTutors, tutors } = useFetchTutors(id);
 
   const tutorAddresses: Array<string> = useMemo(
     () =>
@@ -77,13 +71,14 @@ const TutorManagement: React.FC = () => {
     );
   }
 
-  const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+  const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+
     if (!isConnected || !address) {
       toast.error("Please connect your wallet first");
       return;
     }
 
-    event.preventDefault();
     if (!validateAllFields) {
       return;
     }
@@ -147,7 +142,7 @@ const TutorManagement: React.FC = () => {
               <h2 className="text-xl font-semibold text-gray-900">Add Tutor</h2>
             </div>
 
-            <form onSubmit={onSubmit} className="space-y-4">
+            <form onSubmit={onSubmitHandler} className="space-y-4">
               <div className="space-y-3">
                 {fields.map((field, index) => (
                   <div key={field.id} className="flex gap-2 items-center">
