@@ -143,6 +143,12 @@ export default function Attendees({ totalSessions, id }: AttendeesProps) {
           <div className="min-h-[50px] flex justify-center items-center">
             <Loader2 className="animate-spin size-11" />
           </div>
+        ) : attendeesList.length === 0 ? (
+          <div className="flex min-h-16 justify-center items-center">
+            <p className="text-sm font-medium text-gray-600">
+              There are currently no attendees for this bootcamp
+            </p>
+          </div>
         ) : (
           attendeesList.map((attendee, index) => {
             return (

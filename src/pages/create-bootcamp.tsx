@@ -88,6 +88,7 @@ const CreateBootcamp = ({ setBootcamps }: Props) => {
           totalWeeks: data.totalWeeks,
         },
       ]);
+      navigate("/");
       reset();
     } catch (error: any) {
       console.log("Transaction error:", error);

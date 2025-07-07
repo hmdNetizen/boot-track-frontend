@@ -126,6 +126,10 @@ export const abi = [
         name: "graded_at",
         type: "core::integer::u64",
       },
+      {
+        name: "attendee",
+        type: "core::starknet::contract_address::ContractAddress",
+      },
     ],
   },
   {
@@ -195,6 +199,26 @@ export const abi = [
           {
             name: "tutor_address",
             type: "core::starknet::contract_address::ContractAddress",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::bool",
+          },
+        ],
+        state_mutability: "external",
+      },
+      {
+        type: "function",
+        name: "add_multiple_tutors",
+        inputs: [
+          {
+            name: "bootcamp_id",
+            type: "core::integer::u256",
+          },
+          {
+            name: "tutors",
+            type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
           },
         ],
         outputs: [
@@ -465,22 +489,6 @@ export const abi = [
       },
       {
         type: "function",
-        name: "debug_bootcamp_data",
-        inputs: [
-          {
-            name: "bootcamp_id",
-            type: "core::integer::u256",
-          },
-        ],
-        outputs: [
-          {
-            type: "(core::starknet::contract_address::ContractAddress, core::starknet::contract_address::ContractAddress, core::byte_array::ByteArray, core::bool)",
-          },
-        ],
-        state_mutability: "view",
-      },
-      {
-        type: "function",
         name: "get_assignment_info",
         inputs: [
           {
@@ -488,17 +496,33 @@ export const abi = [
             type: "core::integer::u256",
           },
           {
-            name: "attendee",
-            type: "core::starknet::contract_address::ContractAddress",
-          },
-          {
             name: "week",
             type: "core::integer::u8",
+          },
+          {
+            name: "attendee",
+            type: "core::starknet::contract_address::ContractAddress",
           },
         ],
         outputs: [
           {
             type: "boot_track::types::attendees::AssignmentGrade",
+          },
+        ],
+        state_mutability: "view",
+      },
+      {
+        type: "function",
+        name: "get_all_tutors",
+        inputs: [
+          {
+            name: "bootcamp_id",
+            type: "core::integer::u256",
+          },
+        ],
+        outputs: [
+          {
+            type: "core::array::Array::<core::starknet::contract_address::ContractAddress>",
           },
         ],
         state_mutability: "view",

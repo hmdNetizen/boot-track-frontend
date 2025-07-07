@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import {
   ArrowLeft,
@@ -10,12 +10,8 @@ import {
   Loader2,
 } from "lucide-react";
 import { mockAttendees, mockAssignmentGrades } from "../data/mockData";
-import { type BootcampTuple, type SingleBootcamp } from "./bootcamp-details";
-import { useAccount, useContract } from "@starknet-react/core";
-import { CONTRACT_ADDRESS } from "../lib/contract-address";
-import { provider } from "../lib/rpc-provider";
-import { abi } from "../lib/abi";
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
+import { useFetchAttendees } from "../hooks/use-fetch-attendees";
 
 const AssignmentGrading: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -27,51 +23,11 @@ const AssignmentGrading: React.FC = () => {
     "individual"
   );
 
-  // const { address } = useAccount();
-  // const { contract } = useContract({
-  //   abi,
-  //   address: CONTRACT_ADDRESS,
-  //   provider,
-  // });
-
-  // const [isLoading, setIsLoading] = useState(false);
-  // const [error, setError] = useState<null | string>("");
-
   const { bootcamp, isLoading, error } = useGetSingleBootcamp(Number(id));
+  const { attendeesList, isLoading: isLoadingAttendees } =
+    useFetchAttendees(id);
 
-  // useEffect(() => {
-  //   const fetchAssignmentInfo = async () => {
-  //     if (!contract) return;
-
-  //     setIsLoading(true);
-  //     setError(null);
-
-  //     try {
-  //       const result = await contract.get_assignment_info(Number(id), Number(selectedWeek));
-  //       // @ts-ignore
-  //       const item = result as BootcampTuple;
-  //       const bootcampData: SingleBootcamp = {
-  //         id: Number(id),
-  //         name: item[0],
-  //         totalWeeks: Number(item[1]),
-  //         sessionsPerWeek: Number(item[2]),
-  //         assignmentMaxScore: Number(item[3]),
-  //         numOfAttendees: Number(item[4]),
-  //         isActive: item[5],
-  //       };
-  //       setBootcamp(bootcampData);
-  //     } catch (err: any) {
-  //       console.error("Contract call error:", err);
-  //       setError(err.message);
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
-
-  //   fetchAssignmentInfo();
-  // }, [contract, address]);
-
-  if (isLoading) {
+  if (isLoading || isLoadingAttendees) {
     return (
       <div className="min-h-[70vh] flex justify-center items-center">
         <Loader2 className="animate-spin size-11" />
@@ -208,12 +164,12 @@ const AssignmentGrading: React.FC = () => {
         </div>
 
         <div className="divide-y divide-gray-200">
-          {mockAttendees.map((attendee, index) => {
-            const existingGrade = getExistingGrade(attendee);
-            const currentGrade = grades[attendee] ?? existingGrade;
+          {attendeesList.map((attendee, index) => {
+            const existingGrade = getExistingGrade(attendee.address);
+            const currentGrade = grades[attendee.address] ?? existingGrade;
 
             return (
-              <div key={attendee} className="p-6">
+              <div key={attendee.address} className="p-6">
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
                     <span className="text-primary-600 font-medium">
@@ -223,7 +179,8 @@ const AssignmentGrading: React.FC = () => {
 
                   <div className="flex-1">
                     <h3 className="font-medium text-gray-900">
-                      {attendee.slice(0, 6)}...{attendee.slice(-4)}
+                      {attendee.address.slice(0, 6)}...
+                      {attendee.address.slice(-4)}
                     </h3>
                     <p className="text-sm text-gray-600">
                       {existingGrade > 0
@@ -243,7 +200,10 @@ const AssignmentGrading: React.FC = () => {
                         max={bootcamp.assignmentMaxScore}
                         value={currentGrade}
                         onChange={(e) =>
-                          handleGradeChange(attendee, Number(e.target.value))
+                          handleGradeChange(
+                            attendee.address,
+                            Number(e.target.value)
+                          )
                         }
                         className="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />

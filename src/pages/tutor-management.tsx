@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 
 import {
@@ -9,22 +9,62 @@ import {
   CheckCircle,
   AlertCircle,
   X,
+  Loader2,
 } from "lucide-react";
 import { mockBootcamps, mockTutors } from "../data/mockData";
 
 import { useDynamicInputs, type InputField } from "../hooks/use-dynamic-input";
+import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
+import { Contract } from "starknet";
+import { useAccount, useSendTransaction } from "@starknet-react/core";
+import { CONTRACT_ADDRESS } from "../lib/contract-address";
+import { abi } from "../lib/abi";
+import { provider } from "../lib/rpc-provider";
+import toast from "react-hot-toast";
+import { useFetchTutors } from "../hooks/use-fetch-tutors";
 
 const TutorManagement: React.FC = () => {
   const { id } = useParams<{ id: string }>();
-  const bootcamp = mockBootcamps.find((b) => b.id === id);
-  const [tutors, _setTutors] = useState<string[]>(mockTutors);
 
   const [fields, setFields] = useState<InputField[]>([
     { id: "1", value: "", isValid: true },
   ]);
 
+  const {
+    isLoading: isLoadingTutors,
+    error,
+    setTutors,
+    tutors,
+  } = useFetchTutors(id);
+
+  const tutorAddresses: Array<string> = useMemo(
+    () =>
+      fields
+        .map((field) => (field.isValid ? field.value : ""))
+        .filter((address) => address),
+    [fields]
+  );
+
+  const contractInstance = new Contract(abi, CONTRACT_ADDRESS, provider);
+
+  const { isConnected, address } = useAccount();
+
+  const { sendAsync, isPending } = useSendTransaction({
+    calls: undefined,
+  });
+
   const { handlePaste, updateField, removeField, validateAllFields } =
     useDynamicInputs({ fields, setFields });
+
+  const { bootcamp, isLoading } = useGetSingleBootcamp(Number(id));
+
+  if (isLoading || isLoadingTutors) {
+    return (
+      <div className="min-h-[70vh] flex justify-center items-center">
+        <Loader2 className="animate-spin size-11" />
+      </div>
+    );
+  }
 
   if (!bootcamp) {
     return (
@@ -38,9 +78,28 @@ const TutorManagement: React.FC = () => {
   }
 
   const onSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+    if (!isConnected || !address) {
+      toast.error("Please connect your wallet first");
+      return;
+    }
+
     event.preventDefault();
     if (!validateAllFields) {
       return;
+    }
+
+    try {
+      const call = await contractInstance.populate("add_multiple_tutors", {
+        bootcamp_id: Number(id),
+        tutors: tutorAddresses,
+      });
+      await sendAsync([call]);
+      setTutors((prev) => prev.concat(tutorAddresses));
+      toast.success(`${bootcamp.name}'s tutors added`);
+      setFields([{ id: "1", value: "", isValid: true }]);
+    } catch (error) {
+      console.error(error);
+      toast.error("Error occurred while adding tutor");
     }
   };
 
@@ -89,22 +148,6 @@ const TutorManagement: React.FC = () => {
             </div>
 
             <form onSubmit={onSubmit} className="space-y-4">
-              {/* <FormField
-                label="Tutor Wallet Address"
-                error={errors.tutorAddress}
-                required
-              >
-                <input
-                  {...register("tutorAddress")}
-                  type="text"
-                  placeholder="0x..."
-                  className={`input-field ${
-                    errors.tutorAddress
-                      ? "border-error-300 focus:ring-error-500"
-                      : ""
-                  }`}
-                />
-              </FormField> */}
               <div className="space-y-3">
                 {fields.map((field, index) => (
                   <div key={field.id} className="flex gap-2 items-center">
@@ -140,10 +183,14 @@ const TutorManagement: React.FC = () => {
 
               <button
                 type="submit"
-                // disabled={}
-                className="btn-primary w-full disabled:opacity-50 disabled:cursor-not-allowed"
+                disabled={isPending}
+                className="btn-primary w-full flex justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
               >
-                Add Tutor
+                {isPending ? (
+                  <Loader2 className="animate-spin anim" />
+                ) : (
+                  "Add Tutors"
+                )}
               </button>
 
               <div className="p-3 bg-primary-50 rounded-lg">
@@ -202,9 +249,6 @@ const TutorManagement: React.FC = () => {
                           <p className="text-sm text-gray-600 font-mono">
                             {tutor}
                           </p>
-                          <p className="text-xs text-gray-500 mt-1">
-                            Added on {new Date().toLocaleDateString()}
-                          </p>
                         </div>
                       </div>
 
@@ -212,18 +256,6 @@ const TutorManagement: React.FC = () => {
                         <span className="status-badge status-active text-xs">
                           Active
                         </span>
-                        {/* <button
-                          onClick={() => removeTutor(tutor)}
-                          disabled={isRemoving === tutor}
-                          className="p-2 text-gray-400 hover:text-error-600 rounded-lg hover:bg-error-50 transition-colors disabled:opacity-50"
-                          title="Remove tutor"
-                        >
-                          {isRemoving === tutor ? (
-                            <div className="w-4 h-4 border-2 border-error-600 border-t-transparent rounded-full animate-spin" />
-                          ) : (
-                            <Trash2 className="h-4 w-4" />
-                          )}
-                        </button> */}
                       </div>
                     </div>
                   </div>
