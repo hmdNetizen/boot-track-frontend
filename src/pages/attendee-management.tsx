@@ -1,9 +1,8 @@
 import { useMemo } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Users, User, CheckCircle, Loader2 } from "lucide-react";
+import { ArrowLeft, Users, User, Loader2 } from "lucide-react";
 import { mockAttendeeRecords } from "../data/mockData";
 
-import { GraduationStatus, GraduationStatusColors } from "../types";
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 import { useFetchAttendees } from "../hooks/use-fetch-attendees";
 import DynamicInputFields from "../components/shared/dynamic-input-field";
@@ -15,6 +14,7 @@ import { abi } from "../lib/abi";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
 import type { TAttendee } from "../components/attendees";
+import AttendeeItem from "../components/attendee-item";
 
 const AttendeeManagement = () => {
   const { id } = useParams<{ id: string }>();
@@ -186,67 +186,14 @@ const AttendeeManagement = () => {
             ) : (
               <div className="divide-y divide-gray-200">
                 {attendeesList.map((attendee, index) => {
-                  //   const record = mockAttendeeRecords[attendee];
-                  //   const attendanceRate = record
-                  //     ? Math.round((record.attendanceCount / totalSessions) * 100)
-                  //     : 0;
-
                   return (
-                    <div key={attendee.address} className="p-6">
-                      <div className="flex items-center justify-between">
-                        <div className="flex items-center gap-4">
-                          <div className="w-12 h-12 bg-primary-100 rounded-full flex items-center justify-center">
-                            <span className="text-primary-600 font-medium">
-                              {String.fromCharCode(65 + index)}
-                            </span>
-                          </div>
-
-                          <div className="flex-1">
-                            <div className="flex items-center gap-2">
-                              <h3 className="font-medium text-gray-900">
-                                Student {index + 1}
-                              </h3>
-                              <CheckCircle className="h-4 w-4 text-success-500" />
-                            </div>
-                            <p className="text-sm text-gray-600 font-mono">
-                              {attendee.address}
-                            </p>
-                            <div className="flex items-center gap-4 mt-1 text-xs text-gray-500">
-                              <span>
-                                Attendance: {attendee.attendanceCount}/
-                                {totalSessions} ({attendee.attendanceCount}%)
-                              </span>
-                              <span>
-                                Score: {attendee.totalAssignmentScore}
-                              </span>
-                            </div>
-                          </div>
-                        </div>
-
-                        <div className="flex items-center gap-3">
-                          <span
-                            className={`status-badge ${
-                              GraduationStatusColors[
-                                attendee.graduationStatus as keyof typeof GraduationStatusColors
-                              ]
-                            } text-xs`}
-                          >
-                            {
-                              GraduationStatus[
-                                attendee.graduationStatus as keyof typeof GraduationStatus
-                              ]
-                            }
-                          </span>
-
-                          <Link
-                            to={`/attendee/${bootcamp.id}?address=${attendee}`}
-                            className="btn-secondary text-xs px-2 py-1"
-                          >
-                            View Details
-                          </Link>
-                        </div>
-                      </div>
-                    </div>
+                    <AttendeeItem
+                      key={attendee.address}
+                      index={index}
+                      attendee={attendee}
+                      bootcampId={Number(id)}
+                      totalSessions={totalSessions}
+                    />
                   );
                 })}
               </div>

@@ -5,7 +5,7 @@ import Layout from "./components/Layout";
 import Dashboard from "./pages/Dashboard";
 import CreateBootcamp from "./pages/CreateBootcamp";
 import BootcampDetails from "./pages/BootcampDetails";
-import AttendanceManagement from "./pages/AttendanceManagement";
+import AttendanceManagement from "./pages/attendance-management";
 import AssignmentGrading from "./pages/AssignmentGrading";
 import GraduationProcessing from "./pages/GraduationProcessing";
 import AttendeeView from "./pages/AttendeeView";

@@ -67,7 +67,7 @@ const Dashboard = (props: DashboardProps) => {
         </div>
         <Link
           to="/create-bootcamp"
-          className="btn-primary flex items-center gap-2"
+          className="btn-primary flex items-center gap-2 border-2 border-primary-700"
         >
           <Plus className="h-5 w-5" />
           Create Bootcamp
