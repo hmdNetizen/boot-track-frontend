@@ -7,7 +7,6 @@ import type {
   TAttendee,
   TBootcampAttendeeRecords,
 } from "../components/attendees";
-import { num } from "starknet";
 
 export const useFetchAttendees = (bootcampId: string | undefined) => {
   const [isLoading, setIsLoading] = useState(false);
@@ -21,6 +20,8 @@ export const useFetchAttendees = (bootcampId: string | undefined) => {
     provider,
   });
 
+  console.log(attendeesList);
+
   useEffect(() => {
     if (bootcampId) {
       const fetchAttendees = async () => {
@@ -33,8 +34,9 @@ export const useFetchAttendees = (bootcampId: string | undefined) => {
           const result = await contract.get_all_attendees(Number(bootcampId));
           const data = result as TBootcampAttendeeRecords;
           const attendees: Array<TAttendee> = data.map((attendee: any) => {
+            const formattedAddress = `0x${attendee[0].toString(16)}`;
             return {
-              address: num.toHex(Number(attendee[0])),
+              address: formattedAddress,
               attendanceCount: Number(attendee[1].attendance_count),
               totalAssignmentScore: Number(attendee[1].total_assignment_score),
               graduationStatus: Number(attendee[1].graduation_status),
