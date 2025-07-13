@@ -5,7 +5,6 @@ import {
   Calendar,
   TrendingUp,
   Plus,
-  Eye,
   Loader2,
 } from "lucide-react";
 import type { BootcampData } from "../App";

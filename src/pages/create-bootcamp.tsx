@@ -17,6 +17,7 @@ import FormField from "../components/shared/form-field";
 import { provider } from "../lib/rpc-provider";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import type { BootcampData } from "../App";
+import classNames from "classnames";
 
 type Props = {
   setBootcamps: React.Dispatch<React.SetStateAction<Array<BootcampData>>>;
@@ -135,20 +136,20 @@ const CreateBootcamp = ({ setBootcamps }: Props) => {
           <ArrowLeft className="h-5 w-5" />
         </button>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-200">
             Create New Bootcamp
           </h1>
-          <p className="mt-2 text-gray-600">
+          <p className="mt-2 text-gray-600 dark:text-slate-500">
             Set up a new bootcamp with custom data
           </p>
         </div>
       </div>
 
       {/* Form */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 dark:bg-gray-800 dark:border-gray-600">
         <div className="flex items-center gap-3 mb-6">
           <BookOpen className="h-6 w-6 text-primary-600" />
-          <h2 className="text-xl font-semibold text-gray-900">
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-200">
             Bootcamp Details
           </h2>
         </div>
@@ -161,9 +162,9 @@ const CreateBootcamp = ({ setBootcamps }: Props) => {
             <input
               {...register("name")}
               type="text"
-              className={`input-field ${
-                errors.name ? "border-error-300 focus:ring-error-500" : ""
-              }`}
+              className={classNames("input-field", {
+                "border-error-300 focus:ring-error-500": errors.name,
+              })}
               placeholder="e.g., Web3 Development Bootcamp"
             />
           </FormField>
@@ -239,11 +240,11 @@ const CreateBootcamp = ({ setBootcamps }: Props) => {
           </div>
 
           {/* Summary */}
-          <div className="bg-gray-50 rounded-lg p-4">
-            <h3 className="text-sm font-medium text-gray-900 mb-2">
+          <div className="bg-gray-50 rounded-lg p-4 dark:bg-gray-700">
+            <h3 className="text-sm font-medium text-gray-900 mb-2 dark:text-slate-300">
               Bootcamp Summary
             </h3>
-            <div className="text-sm text-gray-600 space-y-1">
+            <div className="text-sm text-gray-600 space-y-1 dark:text-slate-400">
               <p>• Total Number of Attendees: {watchedValues.totalAttendees}</p>
               <p>• Total sessions: {totalSessions}</p>
               <p>• Duration: {watchedValues.totalWeeks} weeks</p>
@@ -258,14 +259,14 @@ const CreateBootcamp = ({ setBootcamps }: Props) => {
             <button
               type="button"
               onClick={() => navigate("/")}
-              className="btn-secondary flex-1"
+              className="btn-secondary flex-1 dark:bg-gray-700"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting || isPending}
-              className="btn-primary flex flex-1 justify-center disabled:opacity-50 disabled:cursor-not-allowed"
+              className="btn-primary flex flex-1 justify-center disabled:opacity-50 disabled:cursor-not-allowed dark:bg-gray-500"
             >
               {isSubmitting || isPending ? (
                 <Loader2 className="animate-spin anim" />

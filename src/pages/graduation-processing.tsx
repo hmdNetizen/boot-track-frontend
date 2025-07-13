@@ -10,7 +10,6 @@ import {
   CheckCircle,
   Loader2,
 } from "lucide-react";
-import { mockAttendees, mockAttendeeRecords } from "../data/mockData";
 import { GraduationStatus, GraduationStatusColors } from "../types";
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 import { useFetchAttendees } from "../hooks/use-fetch-attendees";

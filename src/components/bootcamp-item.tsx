@@ -10,7 +10,6 @@ export default function BootcampItem({ bootcamp }: BootcampItemProp) {
   const {
     id,
     name,
-    numOfAttendees,
     totalWeeks,
     sessionsPerWeek,
     isActive,
