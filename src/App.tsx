@@ -16,6 +16,7 @@ import { num } from "starknet";
 import { CONTRACT_ADDRESS } from "./lib/contract-address";
 import TutorManagement from "./pages/tutor-management";
 import AttendeeManagement from "./pages/attendee-management";
+import { ThemeProvider } from "./context/ThemeContext";
 
 export type BootcampData = {
   id: number;
@@ -91,7 +92,7 @@ function App() {
   }, [contract, address]);
 
   return (
-    <>
+    <ThemeProvider>
       <Layout>
         <Routes>
           <Route
@@ -128,7 +129,7 @@ function App() {
         </Routes>
       </Layout>
       <Toaster />
-    </>
+    </ThemeProvider>
   );
 }
 
