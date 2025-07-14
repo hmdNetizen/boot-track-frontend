@@ -20,7 +20,7 @@ export default function AttendeeItem({
   );
 
   return (
-    <div className="p-6">
+    <li className="p-6">
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3">
@@ -67,6 +67,6 @@ export default function AttendeeItem({
           </Link>
         </div>
       </div>
-    </div>
+    </li>
   );
 }

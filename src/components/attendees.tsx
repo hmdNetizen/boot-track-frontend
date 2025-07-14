@@ -150,17 +150,19 @@ export default function Attendees({ totalSessions, id }: AttendeesProps) {
             </p>
           </div>
         ) : (
-          attendeesList.map((attendee, index) => {
-            return (
-              <AttendeeItem
-                key={attendee.address}
-                index={index}
-                attendee={attendee}
-                bootcampId={id}
-                totalSessions={totalSessions}
-              />
-            );
-          })
+          <ul>
+            {attendeesList.map((attendee, index) => {
+              return (
+                <AttendeeItem
+                  key={attendee.address}
+                  index={index}
+                  attendee={attendee}
+                  bootcampId={id}
+                  totalSessions={totalSessions}
+                />
+              );
+            })}
+          </ul>
         )}
       </div>
     </div>

@@ -37,8 +37,10 @@ const DynamicInputFields = ({
   return (
     <div className="space-y-4 px-3 p-6">
       <div className="space-y-2">
-        <h2 className="text-2xl font-bold">Register Attendees</h2>
-        <p className="text-muted-foreground">
+        <h2 className="text-2xl font-bold dark:text-slate-200">
+          Register Attendees
+        </h2>
+        <p className="text-muted-foreground dark:text-slate-400">
           Paste comma-separated wallet address and they'll automatically
           populate separate fields
         </p>
@@ -80,12 +82,12 @@ const DynamicInputFields = ({
           onClick={addField}
           className="btn-secondary flex flex-1 justify-center items-center"
         >
-          <Plus className="h-4 w-4 mr-2" />
+          <Plus className="size-4 mr-2" />
           Add Field
         </button>
         <button
           onClick={onRegister}
-          className="btn-primary flex flex-1 gap-4 justify-center items-center disabled:opacity-50 disabled:cursor-not-allowed"
+          className="btn-primary flex flex-1 gap-4 justify-center items-center dark:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed"
           disabled={isPending}
         >
           {isPending ? (
@@ -93,7 +95,7 @@ const DynamicInputFields = ({
           ) : (
             <>
               <UserPlus className="h-4 w-4" />
-              Register Attendees
+              Register
             </>
           )}
         </button>

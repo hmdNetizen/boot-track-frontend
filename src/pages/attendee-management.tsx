@@ -14,6 +14,8 @@ import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
 import type { TAttendee } from "../components/attendees";
 import AttendeeItem from "../components/attendee-item";
+import BootcampNotFound from "../components/shared/bootcamp-not-found";
+import LoadingSpinner from "../components/shared/loading-spinner";
 
 const AttendeeManagement = () => {
   const { id } = useParams<{ id: string }>();
@@ -98,22 +100,11 @@ const AttendeeManagement = () => {
   };
 
   if (isLoading || isLoadingAttendees) {
-    return (
-      <div className="min-h-[70vh] flex justify-center items-center">
-        <Loader2 className="animate-spin size-11" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!bootcamp) {
-    return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900">Bootcamp not found</h2>
-        <Link to="/" className="btn-primary mt-4">
-          Back to Dashboard
-        </Link>
-      </div>
-    );
+    return <BootcampNotFound />;
   }
 
   const totalSessions = bootcamp.totalWeeks * bootcamp.sessionsPerWeek;
@@ -129,10 +120,12 @@ const AttendeeManagement = () => {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-200">
             Attendee Management
           </h1>
-          <p className="mt-2 text-gray-600">{bootcamp.name}</p>
+          <p className="mt-2 text-gray-600 dark:text-slate-400">
+            {bootcamp.name}
+          </p>
         </div>
         <div className="flex items-center gap-2 text-sm text-gray-600">
           <Users className="h-4 w-4" />
@@ -146,7 +139,7 @@ const AttendeeManagement = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         {/* Register Attendees Form */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 py-2 px-1">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 py-2 px-1 dark:bg-gray-800 dark:border-gray-600">
             <DynamicInputFields
               fields={fields}
               addField={addField}
@@ -161,9 +154,9 @@ const AttendeeManagement = () => {
 
         {/* Attendees List */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-2 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-600">
+            <div className="px-2 py-4 border-b border-gray-200 dark:border-gray-600">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-200">
                 Registered Attendees
               </h2>
             </div>
@@ -179,7 +172,7 @@ const AttendeeManagement = () => {
                 </p>
               </div>
             ) : (
-              <div className="divide-y divide-gray-200">
+              <ul className="divide-y divide-gray-200 dark:divide-gray-600">
                 {attendeesList.map((attendee, index) => {
                   return (
                     <AttendeeItem
@@ -191,7 +184,7 @@ const AttendeeManagement = () => {
                     />
                   );
                 })}
-              </div>
+              </ul>
             )}
           </div>
         </div>
@@ -199,8 +192,8 @@ const AttendeeManagement = () => {
 
       {/* Registration Statistics */}
       {attendeesList.length > 0 && (
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-          <h3 className="text-lg font-semibold text-gray-900 mb-4">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
+          <h3 className="text-lg font-semibold text-gray-900 mb-4 dark:text-slate-300">
             Registration Statistics
           </h3>
           <div className="grid grid-cols-1 md:grid-cols-4 gap-6">

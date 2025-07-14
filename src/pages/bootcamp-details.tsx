@@ -17,6 +17,9 @@ import type { BootcampData } from "../App";
 export type BootcampTuple = [string, bigint, bigint, bigint, bigint, boolean];
 import Attendees from "../components/attendees";
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
+import LoadingSpinner from "../components/shared/loading-spinner";
+import BootcampNotFound from "../components/shared/bootcamp-not-found";
+import { renderQuickActions } from "../constants/quick-actions";
 
 export type SingleBootcamp = Pick<
   BootcampData,
@@ -35,65 +38,16 @@ const BootcampDetails: React.FC = () => {
   const { bootcamp, isLoading } = useGetSingleBootcamp(Number(id));
 
   if (isLoading) {
-    return (
-      <div className="min-h-[70vh] flex justify-center items-center">
-        <Loader2 className="animate-spin size-11" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!bootcamp) {
-    return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
-          Bootcamp not found
-        </h2>
-        <Link to="/" className="btn-primary mt-4">
-          Back to Dashboard
-        </Link>
-      </div>
-    );
+    return <BootcampNotFound />;
   }
 
   const totalSessions = bootcamp.totalWeeks * bootcamp.sessionsPerWeek;
 
-  const quickActions = [
-    {
-      name: "Manage Attendees",
-      href: `/bootcamp/${id}/attendees`,
-      icon: UserCheck,
-      description: "Register and manage attendees",
-      color: "text-success-600 bg-success-50",
-    },
-    {
-      name: "Manage Tutors",
-      href: `/bootcamp/${id}/tutors`,
-      icon: Shield,
-      description: "Add and manage tutors",
-      color: "text-warning-600 bg-warning-50",
-    },
-    {
-      name: "Manage Attendance",
-      href: `/bootcamp/${id}/attendance`,
-      icon: Calendar,
-      description: "Open sessions and track attendance",
-      color: "text-primary-600 bg-primary-50",
-    },
-    {
-      name: "Grade Assignments",
-      href: `/bootcamp/${id}/assignments`,
-      icon: FileText,
-      description: "Review and grade student work",
-      color: "text-purple-600 bg-purple-50",
-    },
-    {
-      name: "Process Graduation",
-      href: `/bootcamp/${id}/graduation`,
-      icon: GraduationCap,
-      description: "Evaluate graduation status",
-      color: "text-error-600 bg-error-50",
-    },
-  ];
+  const quickActions = renderQuickActions(id);
 
   return (
     <div className="space-y-8">
