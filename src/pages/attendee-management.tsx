@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { ArrowLeft, Users, User, Loader2 } from "lucide-react";
+import { ArrowLeft, Users, User } from "lucide-react";
 import { Contract } from "starknet";
 
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";

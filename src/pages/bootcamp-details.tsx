@@ -4,13 +4,9 @@ import {
   ArrowLeft,
   Users,
   Calendar,
-  FileText,
   GraduationCap,
   Settings,
   Clock,
-  Loader2,
-  Shield,
-  UserCheck,
 } from "lucide-react";
 
 import type { BootcampData } from "../App";
