@@ -114,9 +114,9 @@ export default function Attendees({ totalSessions, id }: AttendeesProps) {
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-      <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
-        <h2 className="text-lg font-semibold text-gray-900">
+    <div className="bg-white rounded-lg shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-600">
+      <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between dark:border-gray-600">
+        <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-200">
           Registered Attendees
         </h2>
         <button
@@ -127,7 +127,7 @@ export default function Attendees({ totalSessions, id }: AttendeesProps) {
           Add Attendees
         </button>
       </div>
-      <div className="divide-y divide-gray-200">
+      <div className="divide-y divide-gray-200 dark:divide-gray-600">
         {showAddAttendees ? (
           <DynamicInputFields
             fields={fields}

@@ -24,14 +24,16 @@ export default function AttendeeItem({
       <div className="flex items-center justify-between">
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center">
-              <span className="text-primary-600 font-medium">{index + 1}</span>
+            <div className="w-10 h-10 bg-primary-100 rounded-full flex items-center justify-center dark:bg-gray-600">
+              <span className="text-primary-600 font-medium dark:text-slate-200">
+                {index + 1}
+              </span>
             </div>
             <div>
-              <p className="font-medium text-gray-900">
+              <p className="font-medium text-gray-900 dark:text-slate-300">
                 {attendee.address.slice(0, 6)}...{attendee.address.slice(-4)}
               </p>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-gray-600 dark:text-slate-400">
                 Attendance: {attendee.attendanceCount}/{totalSessions} (
                 {attendanceRate}%)
               </p>
@@ -40,7 +42,7 @@ export default function AttendeeItem({
         </div>
         <div className="flex items-center gap-4">
           <div className="text-right">
-            <p className="text-sm font-medium text-gray-900">
+            <p className="text-sm font-medium text-gray-900 dark:text-slate-400">
               Score: {attendee.totalAssignmentScore}
             </p>
             <span

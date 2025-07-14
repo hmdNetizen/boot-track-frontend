@@ -45,7 +45,9 @@ const BootcampDetails: React.FC = () => {
   if (!bootcamp) {
     return (
       <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900">Bootcamp not found</h2>
+        <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
+          Bootcamp not found
+        </h2>
         <Link to="/" className="btn-primary mt-4">
           Back to Dashboard
         </Link>
@@ -105,7 +107,7 @@ const BootcampDetails: React.FC = () => {
         </Link>
         <div className="flex-1">
           <div className="flex items-center gap-3">
-            <h1 className="text-3xl font-bold text-gray-900">
+            <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-200">
               {bootcamp.name}
             </h1>
             <span
@@ -128,50 +130,56 @@ const BootcampDetails: React.FC = () => {
 
       {/* Stats Overview */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
           <div className="flex items-center">
             <Clock className="h-8 w-8 text-primary-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Duration</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-slate-400">
+                Duration
+              </p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-slate-200">
                 {bootcamp.totalWeeks} weeks
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
           <div className="flex items-center">
             <Calendar className="h-8 w-8 text-warning-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">
+              <p className="text-sm font-medium text-gray-600 dark:text-slate-400">
                 Total Sessions
               </p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-2xl font-bold text-gray-900 dark:text-slate-200">
                 {totalSessions}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
           <div className="flex items-center">
             <Users className="h-8 w-8 text-success-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Attendees</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-slate-400">
+                Attendees
+              </p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-slate-200">
                 {bootcamp.numOfAttendees}
               </p>
             </div>
           </div>
         </div>
 
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
           <div className="flex items-center">
             <GraduationCap className="h-8 w-8 text-error-600" />
             <div className="ml-4">
-              <p className="text-sm font-medium text-gray-600">Max Score</p>
-              <p className="text-2xl font-bold text-gray-900">
+              <p className="text-sm font-medium text-gray-600 dark:text-slate-400">
+                Max Score
+              </p>
+              <p className="text-2xl font-bold text-gray-900 dark:text-slate-200">
                 {bootcamp.assignmentMaxScore}
               </p>
             </div>
@@ -180,8 +188,8 @@ const BootcampDetails: React.FC = () => {
       </div>
 
       {/* Quick Actions */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
-        <h2 className="text-lg font-semibold text-gray-900 mb-4">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
+        <h2 className="text-lg font-semibold text-gray-900 mb-4 dark:text-slate-300">
           Quick Actions
         </h2>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
@@ -191,15 +199,17 @@ const BootcampDetails: React.FC = () => {
               <Link
                 key={action.name}
                 to={action.href}
-                className="p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors card-hover"
+                className="p-4 rounded-lg border border-gray-200 hover:border-gray-300 transition-colors card-hover dark:border-gray-600 dark:shadow-gray-700"
               >
                 <div
                   className={`inline-flex p-2 rounded-lg ${action.color} mb-3`}
                 >
                   <Icon className="h-6 w-6" />
                 </div>
-                <h3 className="font-medium text-gray-900">{action.name}</h3>
-                <p className="text-sm text-gray-600 mt-1">
+                <h3 className="font-medium text-gray-900 dark:text-slate-200">
+                  {action.name}
+                </h3>
+                <p className="text-sm text-gray-600 mt-1 dark:text-slate-400">
                   {action.description}
                 </p>
               </Link>
