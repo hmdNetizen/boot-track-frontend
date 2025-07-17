@@ -54,14 +54,6 @@ const TutorManagement: React.FC = () => {
 
   const { bootcamp, isLoading } = useGetSingleBootcamp(Number(id));
 
-  if (isLoading || isLoadingTutors) {
-    return <LoadingSpinner />;
-  }
-
-  if (!bootcamp) {
-    return <BootcampNotFound />;
-  }
-
   const onSubmitHandler = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
@@ -81,7 +73,7 @@ const TutorManagement: React.FC = () => {
       });
       await sendAsync([call]);
       setTutors((prev) => prev.concat(tutorAddresses));
-      toast.success(`${bootcamp.name}'s tutors added`);
+      toast.success(`${bootcamp?.name}'s tutors added`);
       setFields([{ id: "1", value: "", isValid: true }]);
     } catch (error) {
       console.error(error);
@@ -101,6 +93,14 @@ const TutorManagement: React.FC = () => {
       handlePaste(pastedText, fieldIndex);
     }
   };
+
+  if (isLoading || isLoadingTutors) {
+    return <LoadingSpinner />;
+  }
+
+  if (!bootcamp) {
+    return <BootcampNotFound />;
+  }
 
   return (
     <div className="space-y-8">

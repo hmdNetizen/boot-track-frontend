@@ -9,7 +9,6 @@ import {
   Square,
   CheckCircle,
   XCircle,
-  Loader2,
 } from "lucide-react";
 import { mockAttendanceSessions } from "../data/mockData";
 import type { BootcampTuple, SingleBootcamp } from "./bootcamp-details";
@@ -17,6 +16,8 @@ import { useAccount, useContract } from "@starknet-react/core";
 import { abi } from "../lib/abi";
 import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
+import LoadingSpinner from "../components/shared/loading-spinner";
+import BootcampNotFound from "../components/shared/bootcamp-not-found";
 
 const AttendanceManagement: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -68,22 +69,11 @@ const AttendanceManagement: React.FC = () => {
   }, [contract, address]);
 
   if (isLoading) {
-    return (
-      <div className="min-h-[70vh] flex justify-center items-center">
-        <Loader2 className="animate-spin size-11" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!bootcamp?.name) {
-    return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900">Bootcamp not found</h2>
-        <Link to="/" className="btn-primary mt-4">
-          Back to Dashboard
-        </Link>
-      </div>
-    );
+    return <BootcampNotFound />;
   }
 
   const handleOpenAttendance = async () => {
@@ -134,7 +124,7 @@ const AttendanceManagement: React.FC = () => {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-200">
             Attendance Management
           </h1>
           <p className="mt-2 text-gray-600">{bootcamp.name}</p>
@@ -144,17 +134,17 @@ const AttendanceManagement: React.FC = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Open New Session */}
         <div className="lg:col-span-1">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
             <div className="flex items-center gap-3 mb-6">
               <Play className="h-6 w-6 text-primary-600" />
-              <h2 className="text-xl font-semibold text-gray-900">
+              <h2 className="text-xl font-semibold text-gray-900 dark:text-slate-300">
                 Open Attendance
               </h2>
             </div>
 
             <div className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-slate-400">
                   Week
                 </label>
                 <select
@@ -171,7 +161,7 @@ const AttendanceManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-slate-400">
                   Session
                 </label>
                 <select
@@ -188,7 +178,7 @@ const AttendanceManagement: React.FC = () => {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-slate-400">
                   Duration (minutes)
                 </label>
                 <input
@@ -225,9 +215,9 @@ const AttendanceManagement: React.FC = () => {
 
         {/* Sessions Overview */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-            <div className="px-6 py-4 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-900">
+          <div className="bg-white rounded-lg shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-600">
+            <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-600">
+              <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-300">
                 Sessions Overview
               </h2>
             </div>
@@ -243,10 +233,10 @@ const AttendanceManagement: React.FC = () => {
                     return (
                       <div
                         key={`${week}-${session}`}
-                        className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors"
+                        className="border border-gray-200 rounded-lg p-4 hover:border-gray-300 transition-colors dark:border-gray-600"
                       >
                         <div className="flex items-center justify-between mb-3">
-                          <h3 className="font-medium text-gray-900">
+                          <h3 className="font-medium text-gray-900 dark:text-slate-400">
                             Week {week}, Session {session}
                           </h3>
                           <div className="flex items-center gap-2">
@@ -271,7 +261,7 @@ const AttendanceManagement: React.FC = () => {
                         </div>
 
                         {sessionData && (
-                          <div className="space-y-2 text-sm text-gray-600">
+                          <div className="space-y-2 text-sm text-gray-600 dark:text-slate-400">
                             <div className="flex items-center gap-2">
                               <Clock className="h-4 w-4" />
                               <span>{sessionData.durationMinutes} minutes</span>
