@@ -1,14 +1,6 @@
 import React, { useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import {
-  ArrowLeft,
-  FileText,
-  User,
-  Calendar,
-  Save,
-  Users,
-  Loader2,
-} from "lucide-react";
+import { ArrowLeft, FileText, User, Calendar, Save, Users } from "lucide-react";
 import { mockAttendees, mockAssignmentGrades } from "../data/mockData";
 import { useGetSingleBootcamp } from "../hooks/use-get-single-bootcamp";
 import { useFetchAttendees } from "../hooks/use-fetch-attendees";
@@ -18,6 +10,9 @@ import { CONTRACT_ADDRESS } from "../lib/contract-address";
 import { provider } from "../lib/rpc-provider";
 import { useAccount, useSendTransaction } from "@starknet-react/core";
 import toast from "react-hot-toast";
+import classNames from "classnames";
+import BootcampNotFound from "../components/shared/bootcamp-not-found";
+import LoadingSpinner from "../components/shared/loading-spinner";
 
 const AssignmentGrading: React.FC = () => {
   const { id } = useParams<{ id: string }>();
@@ -41,22 +36,11 @@ const AssignmentGrading: React.FC = () => {
     useFetchAttendees(id);
 
   if (isLoading || isLoadingAttendees) {
-    return (
-      <div className="min-h-[70vh] flex justify-center items-center">
-        <Loader2 className="animate-spin size-11" />
-      </div>
-    );
+    return <LoadingSpinner />;
   }
 
   if (!bootcamp) {
-    return (
-      <div className="text-center py-12">
-        <h2 className="text-2xl font-bold text-gray-900">Bootcamp not found</h2>
-        <Link to="/" className="btn-primary mt-4">
-          Back to Dashboard
-        </Link>
-      </div>
-    );
+    return <BootcampNotFound />;
   }
 
   const weeks = Array.from({ length: bootcamp.totalWeeks }, (_, i) => i + 1);
@@ -111,30 +95,36 @@ const AssignmentGrading: React.FC = () => {
           <ArrowLeft className="h-5 w-5" />
         </Link>
         <div className="flex-1">
-          <h1 className="text-3xl font-bold text-gray-900">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-slate-200">
             Assignment Grading
           </h1>
-          <p className="mt-2 text-gray-600">{bootcamp.name}</p>
+          <p className="mt-2 text-gray-600 dark:text-slate-400">
+            {bootcamp.name}
+          </p>
         </div>
         <div className="flex items-center gap-2">
           <button
             onClick={() => setGradingMode("individual")}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              gradingMode === "individual"
-                ? "bg-primary-100 text-primary-700"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
+            className={classNames(
+              "px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-500",
+              {
+                "bg-primary-100 text-primary-700 dark:text-primary-700":
+                  gradingMode === "individual",
+              }
+            )}
           >
             <User className="h-4 w-4 inline mr-1" />
             Individual
           </button>
           <button
             onClick={() => setGradingMode("batch")}
-            className={`px-3 py-2 rounded-lg text-sm font-medium transition-colors ${
-              gradingMode === "batch"
-                ? "bg-primary-100 text-primary-700"
-                : "text-gray-600 hover:bg-gray-100"
-            }`}
+            className={classNames(
+              "px-3 py-2 rounded-lg text-sm font-medium transition-colors text-gray-600 hover:bg-gray-100 dark:text-gray-300 dark:hover:bg-gray-500",
+              {
+                "bg-primary-100 text-primary-700 dark:text-primary-700":
+                  gradingMode === "batch",
+              }
+            )}
           >
             <Users className="h-4 w-4 inline mr-1" />
             Batch
@@ -143,11 +133,11 @@ const AssignmentGrading: React.FC = () => {
       </div>
 
       {/* Week Selection */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 dark:bg-gray-800 dark:border-gray-600">
         <div className="flex items-center gap-4">
           <Calendar className="h-6 w-6 text-primary-600" />
           <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 mb-2 dark:text-slate-300">
               Select Week to Grade
             </label>
             <select
@@ -163,8 +153,10 @@ const AssignmentGrading: React.FC = () => {
             </select>
           </div>
           <div className="text-right">
-            <p className="text-sm text-gray-600">Maximum Score</p>
-            <p className="text-2xl font-bold text-gray-900">
+            <p className="text-sm text-gray-600 dark:text-slate-400">
+              Maximum Score
+            </p>
+            <p className="text-2xl font-bold text-gray-900 dark:text-slate-300">
               {bootcamp.assignmentMaxScore}
             </p>
           </div>
@@ -172,11 +164,11 @@ const AssignmentGrading: React.FC = () => {
       </div>
 
       {/* Grading Interface */}
-      <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between">
+      <div className="bg-white rounded-lg shadow-sm border border-gray-200 dark:bg-gray-800 dark:border-gray-600">
+        <div className="px-6 py-4 border-b border-gray-200 flex items-center justify-between dark:border-gray-600">
           <div className="flex items-center gap-3">
             <FileText className="h-6 w-6 text-primary-600" />
-            <h2 className="text-lg font-semibold text-gray-900">
+            <h2 className="text-lg font-semibold text-gray-900 dark:text-slate-200">
               Week {selectedWeek} Assignments
             </h2>
           </div>
@@ -192,7 +184,7 @@ const AssignmentGrading: React.FC = () => {
           )}
         </div>
 
-        <div className="divide-y divide-gray-200">
+        <div className="divide-y divide-gray-200 dark:divide-gray-600">
           {attendeesList.map((attendee, index) => {
             const existingGrade = getExistingGrade(attendee.address);
             const currentGrade = grades[attendee.address] ?? existingGrade;
@@ -207,11 +199,11 @@ const AssignmentGrading: React.FC = () => {
                   </div>
 
                   <div className="flex-1">
-                    <h3 className="font-medium text-gray-900">
+                    <h3 className="font-medium text-gray-900 dark:text-slate-200">
                       {attendee.address.slice(0, 6)}...
                       {attendee.address.slice(-4)}
                     </h3>
-                    <p className="text-sm text-gray-600">
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
                       {existingGrade > 0
                         ? `Previous score: ${existingGrade}`
                         : "Not graded yet"}
@@ -220,14 +212,14 @@ const AssignmentGrading: React.FC = () => {
 
                   <div className="flex items-center gap-4">
                     <div className="flex items-center gap-2">
-                      <label className="text-sm font-medium text-gray-700">
+                      <label className="text-sm font-medium text-gray-700 dark:text-gray-400">
                         Score:
                       </label>
                       <input
                         type="number"
                         min="0"
                         max={bootcamp.assignmentMaxScore}
-                        value={currentGrade}
+                        value={currentGrade ? currentGrade : ""}
                         onChange={(e) =>
                           handleGradeChange(
                             attendee.address,
@@ -236,24 +228,25 @@ const AssignmentGrading: React.FC = () => {
                         }
                         className="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
                       />
-                      <span className="text-sm text-gray-500">
+                      <span className="text-sm text-gray-500 dark:text-slate-300">
                         / {bootcamp.assignmentMaxScore}
                       </span>
                     </div>
 
                     <div className="w-24 bg-gray-200 rounded-full h-2">
                       <div
-                        className="bg-primary-600 h-2 rounded-full transition-all duration-300"
+                        className="bg-primary-600 h-2 rounded-full transition-all duration-300 overflow-x-hidden"
                         style={{
                           width: `${
                             (currentGrade * 100) / bootcamp.assignmentMaxScore
                           }%`,
+                          maxWidth: "100%",
                         }}
                       />
                     </div>
 
                     <div className="text-right min-w-[60px]">
-                      <span className="text-sm font-medium text-gray-900">
+                      <span className="text-sm font-medium text-gray-900 dark:text-slate-300">
                         {Math.round(
                           (currentGrade / bootcamp.assignmentMaxScore) * 100
                         )}
@@ -268,15 +261,15 @@ const AssignmentGrading: React.FC = () => {
         </div>
 
         {gradingMode === "batch" && (
-          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200">
+          <div className="px-6 py-4 bg-gray-50 border-t border-gray-200 dark:bg-gray-800 dark:border-gray-600">
             <div className="flex items-center gap-4">
               <div className="flex items-center gap-2">
-                <label className="text-sm font-medium text-gray-700">
+                <label className="text-sm font-medium text-gray-700 dark:text-slate-400">
                   Apply same score to all:
                 </label>
                 <input
                   type="number"
-                  min="0"
+                  // min="0"
                   max={bootcamp.assignmentMaxScore}
                   className="w-20 px-2 py-1 border border-gray-300 rounded focus:outline-none focus:ring-2 focus:ring-primary-500"
                   onChange={(e) => {
