@@ -136,17 +136,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               <div className="hidden lg:block lg:h-6 lg:w-px lg:bg-gray-200" />
               <div
                 className={classNames(
-                  "flex items-center gap-x-4 text-sm font-medium text-gray-900",
-                  {
-                    hidden: !address,
-                  }
+                  "flex items-center gap-x-4 text-sm font-medium text-gray-900 dark:text-slate-200"
                 )}
               >
                 Connected Wallet:{" "}
-                <span className="text-green-600">
-                  {address?.slice(0, 6)}....
-                  {address?.slice(-4)}
-                </span>
+                {address ? (
+                  <span className="text-green-600">
+                    {address?.slice(0, 6)}....
+                    {address?.slice(-4)}
+                  </span>
+                ) : (
+                  <span className="text-gray-900 dark:text-slate-200">Nil</span>
+                )}
               </div>
             </div>
             <div className="flex space-x-6 items-center">

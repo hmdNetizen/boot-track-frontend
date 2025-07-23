@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 export default function BootcampNotFound() {
   return (
-    <div className="text-center py-12">
+    <div className="min-h-[80vh] flex flex-col justify-center items-center text-center py-12">
       <h2 className="text-2xl font-bold text-gray-900 dark:text-slate-200">
         Bootcamp not found
       </h2>
