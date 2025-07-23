@@ -145,7 +145,7 @@ export default function Attendees({ totalSessions, id }: AttendeesProps) {
           </div>
         ) : attendeesList.length === 0 ? (
           <div className="flex min-h-16 justify-center items-center">
-            <p className="text-sm font-medium text-gray-600">
+            <p className="text-sm font-medium text-gray-600 dark:text-slate-300">
               There are currently no attendees for this bootcamp
             </p>
           </div>
